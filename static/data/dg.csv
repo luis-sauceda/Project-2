@@ -1,0 +1,31 @@
+device_id,site_id,device_name,dg1,dg2,dg3
+100538,24,UMA PB y P1,,UMAs,Subestación 2
+100541,24,Contactos de STT y Sosiedad PB,,Habemus Firma,Subestación 2
+100548,46321,Chiller 2,ArCom,Chillers,Subestación 2
+100537,24,Transformador 1000 kVA Subestacion 2,Total,,Subestación 2
+100543,46321,Bomba Agua Helada 1,ArCom,Bombas de refrigeración,Subestación 3
+100544,46321,Bomba Agua Helada 3,ArCom,Bombas de refrigeración,Subestación 3
+100552,46321,Elevador 1,ArCom,Elevadores,Subestación 3
+100553,46321,Elevador 2,ArCom,Elevadores,Subestación 3
+100554,46321,Elevador 3,ArCom,Elevadores,Subestación 3
+100555,46321,Elevador 4,ArCom,Elevadores,Subestación 3
+100558,46321,Emergencia General Estacionamiento ,ArCom,Iluminación,Subestación 3
+100604,46321,Interruptor General Estacionamiento,ArCom,Iluminación,Subestación 3
+100545,46321,Transformador 750 kVA 1 Subestacion 3,Total,,Subestación 3
+100547,46321,Transformador 750kVA 2 Subestacion 3 ,Total,,Subestación 3
+100556,46321,Transformador 750 kVA 1 Subestacion 3 P2,Total,,Subestación 3
+100557,46321,Transformador 750 kVA 2 Subestacion 3 P2,Total,,Subestación 3
+100339,46191,Transformador Principal,Total,,
+100342,46191,Elevador A,,Elevadores,
+100343,46191,Elevador B,,Elevadores,
+100344,46191,Elevador C,,Elevadores,
+100345,46191,Elevador D,,Elevadores,
+100349,46191,Sotano 8,,Sótano 8,
+100350,46191,Transformador Lobby,,Transformador Lobby,
+100351,46191,Sotano 1 Alumbrado,,Sótano 1 Alumbrado,
+100353,46191,Extractor de Aire Sotano,,Extractor,
+100355,46191,Chiller 1,,Chillers,
+100357,46191,Chiller 2,,Chillers,
+100362,46191,Inyector de Aire,,Inyector,
+100363,46191,Bomba Refrigeracion 1,,Bombas de refrigeración,
+100364,46191,Bomba Refrigeracion 2,,Bombas de refrigeración,

@@ -5421,7 +5421,7 @@ a.badge-dark:focus, a.badge-dark.focus {
 
 .jumbotron {
   margin-bottom: 1rem;
-  margin-top: 20px;
+  margin-top: 2px;
   background-color: #4E5D6C;
   border-radius: 0px;
 }

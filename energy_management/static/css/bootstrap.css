@@ -593,6 +593,8 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+  margin-top: 15px;
+  margin-bottom: 25px;
 }
 
 .row {
@@ -4868,6 +4870,7 @@ input[type="button"].btn-block {
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0px;
+  box-shadow: 2px 2px 13px 0px #111111;
 }
 
 .card > hr {
@@ -5420,10 +5423,10 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .jumbotron {
-  margin-bottom: 1rem;
   margin-top: 2px;
   background-color: #4E5D6C;
   border-radius: 0px;
+  box-shadow: 2px 2px 13px 0px #111111;
 }
 
 @media (min-width: 576px) {
@@ -6935,7 +6938,9 @@ button.bg-success:focus {
 }
 
 .bg-info {
-  background-color: #5bc0de !important;
+  background-color: #0096A3 !important;
+  border-radius: 10px !important;
+  box-shadow: 3px 3px 12px 0px #575757 !important;
 }
 
 a.bg-info:hover, a.bg-info:focus,

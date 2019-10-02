@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 from flask import Flask, render_template, url_for
 
->>>>>>> aab8425cd16e574a393d7a9b5094ab561f8932b8
 import os
 
 import pandas as pd
@@ -27,18 +24,6 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///static/db/project.sqlite"
 db = SQLAlchemy(app)
 
-<<<<<<< HEAD
-#reflect an existing database into a new model
-Base = automap_base()
-# reflect the tables
-Base.prepare(db.engine, reflect=True)
-
-# Save references to each table
-# CAMBIAR ESTO DE SER NECESATIO
-Samples_Metadata = Base.classes.sample_metadata
-Samples = Base.classes.samples
-=======
->>>>>>> aab8425cd16e574a393d7a9b5094ab561f8932b8
 
 
 @app.route('/')

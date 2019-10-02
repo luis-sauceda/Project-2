@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 import os
 
@@ -21,22 +21,14 @@ app = Flask(__name__)
 #################################################
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///static/db/project.sqlite"
 db = SQLAlchemy(app)
 
-# reflect an existing database into a new model
-Base = automap_base()
-# reflect the tables
-Base.prepare(db.engine, reflect=True)
-
-# Save references to each table
-#CAMBIAR ESTO DE SER NECESATIO
-Samples_Metadata = Base.classes.sample_metadata
-Samples = Base.classes.samples
 
 
 @app.route('/')
 def home():
+    
     return render_template("index.html")
 
 
@@ -63,6 +55,7 @@ def dated_url_for(endpoint, **values):
                                  endpoint, filename)
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values) 
+
 
 
 if __name__ == "__main__":

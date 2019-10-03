@@ -4,6 +4,16 @@
 	<meta charset="utf-8">
 	<title>Electrical Analisis Dashboard</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	
+	<!-- references for map - Luis Sauceda 10/02/19 -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  	integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  	crossorigin=""/>
+  	<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+  	integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+  	crossorigin=""></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<!--  -->
 </head>
 <body>
 	<div class = "container-fluid">
@@ -18,8 +28,15 @@
 		  			<h4 class="card-header">Mapa</h4>
 		  			<div class="card-body">
     					<h4 class="card-title">Secondary card title</h4>
-    					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  					</div>
+						<!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+						<div id="map" style="width: 600px; height: 400px;"></div>						
+						<!--API Key-->
+						<script type="text/javascript" src="{{ url_for('static', filename='js/config.js') }}"></script>
+						<script>console.log("{{ url_for('static', filename='js/config.js') }}");</script>
+						
+						<!-- JS -->	
+  						<script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}"></script>					  
+					</div>
   				</div>
 		  	</div>
 		  	<div class="col-3">

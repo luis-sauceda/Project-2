@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
 	<meta charset="utf-8">
-	<title>Electrical Analisis Dashboard</title>
+	<title>Indicadores Energeticos</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 	
 	<!-- references for map - Luis Sauceda 10/02/19 -->
@@ -18,7 +18,7 @@
 <body>
 	<div class = "container-fluid">
 		<div class = "jumbotron">
-			<h1 class = "text-center"> Electrical Billing Information</h1>
+			<h1 class = "text-center">Indicadores Energeticos</h1>
 		</div>
 	</div>
 	<div class= "container-fluid">
@@ -44,14 +44,14 @@
 				  	<img style="height: 200px; width: 100%; display: block;" src="{{ url_for('static', filename='images/46321.png') }}" alt="Card image">
 				  	<div class="card-body">
 						<h5 class = "card-title">Seleccionar Mes</h5>
-						<div class="btn-group btn-group-toggle" data-toggle="buttons">
-							<label class="btn btn-primary active">
-						    	<input type="checkbox" checked="" autocomplete="off"> Julio
+						<div class="btn-group" data-toggle="buttons">
+							<label class="btn btn-primary">
+						    	<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""> Julio
 						  	</label>
 						  	<label class="btn btn-primary">
-						    	<input type="checkbox" autocomplete="off"> Agosto
+						    	<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Agosto
 						  	</label>
-						</div>	
+						</div>
 						<hr/>
 						<h5 class = "card-title">Información</h5>			  	
 				  		<div class="card card-body text-white bg-info mb-3">

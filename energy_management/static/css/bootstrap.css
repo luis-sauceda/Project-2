@@ -6929,6 +6929,8 @@ button.bg-secondary:focus {
 
 .bg-success {
   background-color: #5cb85c !important;
+  border-radius: 10px !important;
+  box-shadow: 5px 3px 12px 0px #575757 !important;
 }
 
 a.bg-success:hover, a.bg-success:focus,
@@ -6940,7 +6942,7 @@ button.bg-success:focus {
 .bg-info {
   background-color: #0096A3 !important;
   border-radius: 10px !important;
-  box-shadow: 3px 3px 12px 0px #575757 !important;
+  box-shadow: 5px 3px 12px 0px #575757 !important;
 }
 
 a.bg-info:hover, a.bg-info:focus,

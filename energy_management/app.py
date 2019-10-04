@@ -36,8 +36,8 @@ def building2():
 
 
 #Get the maximum power at peak hour
-@app.route('/punta/<site>')
-def total_punta(site):
+@app.route('/punta/<site>/<mes>')
+def total_punta(site,mes):
     engine = create_engine("sqlite:///static/db/project.sqlite")
     session = Session(engine)
     
@@ -56,6 +56,9 @@ def total_punta(site):
     line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].str.slice(0,19)
     #Convert to datetime object
     line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].apply(lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M:%S'))
+    #Create month column and filter desired month
+    line_data['month'] = line_data['measurement_time(UTC)'].apply(lambda x: x.month)
+    line_data = line_data[line_data['month'] == int(mes)]
     #Create hour column
     line_data['hour'] = line_data['measurement_time(UTC)'].apply(lambda x: x.time())
     #Create weekday column and modify it so that sunday is 0 and monday is 1

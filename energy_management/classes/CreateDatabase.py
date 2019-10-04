@@ -13,11 +13,9 @@ def createDb():
 	path = "../static/data/"
 	
 	groupsDf = pd.read_csv(f"{path}dg.csv")
-	print(groupsDf.head())
 	measurementsDf = pd.read_csv(f"{path}measurements.csv")
-	print(measurementsDf.head())
 	sitesDf = pd.read_csv(f"{path}sites.csv")
-	print(sitesDf.head())
+	horarioDf = pd.read_csv(f"{path}horario_gdmth.csv")
 
 	#Create the database
 	engine = create_engine("sqlite:///../static/db/project.sqlite")
@@ -49,6 +47,13 @@ def createDb():
 			Column("enegy(Wh)", Integer, nullable = False)
 		)
 
+	horario = Table("horarios", metadata,
+			Column("periodo_cfe", String, nullable = False),
+			Column("Hora", DateTime, nullable = False),
+			Column("Dia", Integer, nullable = False),
+			Column("Temporada", String, nullable = False)
+		)
+
 	try:
 		metadata.create_all(engine)
 		print("Tables created")
@@ -58,8 +63,13 @@ def createDb():
 
 	conn = engine.connect()
 	sitesDf.to_sql("sites", conn, if_exists = "replace", index = False)
+	print("Data successfully loaded into Sites table!")
 	groupsDf.to_sql("dg", conn, if_exists = "replace", index = False)
+	print("Data successfully loaded into Dg table!")
 	measurementsDf.to_sql("measurements", conn, if_exists = "replace", index = True, chunksize = 100 )
+	print("Data successfully loaded into Measurements table!")
+	horarioDf.to_sql("horarios", conn, if_exists = "replace", index = True, chunksize = 100)
+	print("Data successfully loaded into Horarios table!")
 
 
 createDb()

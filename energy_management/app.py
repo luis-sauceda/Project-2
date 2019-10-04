@@ -27,6 +27,11 @@ def home():
 
 	return render_template("index.html")
 
+@app.route('/building2')
+def building2():
+
+    return render_template("building2.html")
+
 
 #Get the maximum power at peak hour
 @app.route('/punta/<site>')

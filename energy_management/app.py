@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-=======
 from flask import Flask, render_template, url_for
-<<<<<<< HEAD
-=======
 
->>>>>>> aab8425cd16e574a393d7a9b5094ab561f8932b8
->>>>>>> 733444de43ee687aa1781a861ca4a8b0d8b064f6
 import os
 
 import pandas as pd

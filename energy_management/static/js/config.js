@@ -3,3 +3,18 @@ const API_KEY = "pk.eyJ1IjoibHVpc2F1Y2VkYSIsImEiOiJjazByZGgwOGcwMzhjM2xsNjZ1MjBk
 
 var selectedBuilding = null;
 var selectedMonth = null;
+
+function setBuilding(building){
+	selectedBuilding = building;
+	redraw();
+}
+
+function setMonth(month) {
+	selectedMonth = month;
+	redraw();
+}
+
+function redraw() {
+	console.log(selectedBuilding);
+	console.log(selectedMonth);
+}

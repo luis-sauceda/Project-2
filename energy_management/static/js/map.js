@@ -9,6 +9,9 @@ var myMap = L.map("map", {
 });
 
 
+setTimeout(function(){ myMap.invalidateSize()}, 500);
+
+
 // Add a tile layer (the background map image) to our map
 // We use the addTo method to add objects to our map
 L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -44,12 +47,20 @@ var markerInsurgentes = L.marker([19.3941062, -99.1723895], {
 }).addTo(myMap);
 
 
-var popupContentIns =  '<a target="_blank" class="popup" href="http://www.gicsa.com.mx/es/portafolio/detalle-proyecto/insurgentes-688">' +
+// var popupContentIns =  '<a target="_blank" class="popup" href="http://www.gicsa.com.mx/es/portafolio/detalle-proyecto/insurgentes-688">' +
+//                     '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+//                     "<div>Insurgentes 688</div>" +
+//                     '</a>';
+var url = window.location.href + 'test';
+
+var popupContentIns =  '<a target="_blank" class="popup" href="' + url + '">' +
                     '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
                     "<div>Insurgentes 688</div>" +
                     '</a>';
 
 markerInsurgentes.bindPopup(popupContentIns,{minWidth: 300});
+
+console.log(url);
 
   //***************************************************************************************
 //***************************************************************************************

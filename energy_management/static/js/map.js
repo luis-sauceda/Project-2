@@ -29,8 +29,16 @@ var markerReforma1 = L.marker([19.3735716, -99.2612436], {
   title: "Reforma 490 - Sub2"
 }).addTo(myMap);
 
+//Get the URL to put the href in the pop-up marker
+var url1 = window.location.href;
+
+// define popup marker content
+var popupContentRef1 =  '<a target="_blank" class="popup" href="' + url1 + '">' +
+                    '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+                    "<div>Reforma 490 - Sub2</div>" +
+                    '</a>';
 // Binding a pop-up to our marker
-markerReforma1.bindPopup("Reforma 490 - Sub2");
+markerReforma1.bindPopup(popupContentRef1,{minWidth: 300});
 
 // Pass in some initial options, and then add it to the map using the addTo method
 var markerReforma2 = L.marker([19.3719720, -99.2607440], {
@@ -38,8 +46,12 @@ var markerReforma2 = L.marker([19.3719720, -99.2607440], {
   title: "Reforma 490 - Sub3"
 }).addTo(myMap);
 
+var popupContentRef2 =  '<a target="_blank" class="popup" href="' + url1 + '">' +
+                    '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+                    "<div>Reforma 490 - Sub3</div>" +
+                    '</a>';
 // Binding a pop-up to our marker
-markerReforma2.bindPopup("Reforma 490 - Sub3");
+markerReforma2.bindPopup(popupContentRef2,{minWidth: 300});
 
 var markerInsurgentes = L.marker([19.3941062, -99.1723895], {
   draggable: false,
@@ -51,9 +63,9 @@ var markerInsurgentes = L.marker([19.3941062, -99.1723895], {
 //                     '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
 //                     "<div>Insurgentes 688</div>" +
 //                     '</a>';
-var url = window.location.href + 'test';
+url2 = window.location.href + 'building2';
 
-var popupContentIns =  '<a target="_blank" class="popup" href="' + url + '">' +
+var popupContentIns =  '<a target="_blank" class="popup" href="' + url2 + '", _self>' +
                     '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
                     "<div>Insurgentes 688</div>" +
                     '</a>';

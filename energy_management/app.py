@@ -49,7 +49,7 @@ def total_punta(site):
     
     
     #Load the electrical measurements from the database
-    line_data = pd.read_sql('SELECT "measurement_time(UTC)", "power(W)"/1000 AS "power(kW)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)
+    line_data = pd.read_sql('SELECT "measurement_time(UTC)", SUM("power(W)"/1000) AS "power(kW)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)
     
     
     #Remove the +00

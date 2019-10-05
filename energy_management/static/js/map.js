@@ -73,8 +73,5 @@ var popupContentIns =  '<a target="_blank" class="popup" href="/building2" targe
 
 markerInsurgentes.bindPopup(popupContentIns,{minWidth: 300});
 
-console.log(url1);
-console.log(url2);
-
   //***************************************************************************************
 //***************************************************************************************

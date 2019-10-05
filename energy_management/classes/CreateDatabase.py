@@ -41,10 +41,10 @@ def createDb():
 
 	measurements = Table("measurements", metadata,
 			Column("device_id", Integer, ForeignKey("dg.device_id")),
-			Column("measurement_time(UTC)", DateTime, nullable = False),
-			Column("power(W)", Integer, nullable = False),
+			Column("measurement_time", DateTime, nullable = False),
+			Column("power", Integer, nullable = False),
 			Column("power_factor", Float, nullable = False),
-			Column("enegy(Wh)", Integer, nullable = False)
+			Column("energy", Integer, nullable = False)
 		)
 
 	horario = Table("horarios", metadata,

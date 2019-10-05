@@ -24,6 +24,54 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///static/db/project.sqlite"
 
 
+def powerDataFrame(site, mes):
+	engine = create_engine("sqlite:///static/db/project.sqlite")
+	session = Session(engine)
+
+	# Create and modify a DataFrame containing information about CFE schedules
+	time_data = pd.read_sql('SELECT * FROM "horarios"', con = engine).drop(columns=['index'])
+	time_data = time_data[time_data['Temporada'] == 'Verano']
+	time_data['Hora'] = time_data['Hora'].apply(lambda x: datetime.strptime(x, '%H:%M').time())
+	time_data['Día'] = time_data['Día'].astype(str)
+	
+	#Load the electrical measurements from the database
+	line_data = pd.read_sql('SELECT "measurement_time(UTC)", SUM("power(W)"/1000) AS "power(kW)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)
+	
+	#Remove the +00
+	line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].str.slice(0,19)
+	#Convert to datetime object
+	line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].apply(lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M:%S'))
+	#Create month column and filter desired month
+	line_data['month'] = line_data['measurement_time(UTC)'].apply(lambda x: x.month)
+	line_data = line_data[line_data['month'] == int(mes)]
+	#Create hour column
+	line_data['hour'] = line_data['measurement_time(UTC)'].apply(lambda x: x.time())
+	#Create weekday column and modify it so that sunday is 0 and monday is 1
+	line_data['weekday'] = line_data['measurement_time(UTC)'].apply(lambda x: x.weekday())
+	line_data['weekday'] = line_data['weekday'].apply(lambda x: x +1).apply(lambda x: str(x).replace('7', '0'))
+	#Create date column
+	line_data['date'] = line_data['measurement_time(UTC)'].apply(lambda x: x.date())
+	#Create a copy of line_data DataFrame
+	temporal = line_data.copy()
+	
+	#Merge electrical measurements with CFE schedules
+	line_data = pd.merge(left = line_data, right = time_data, left_on=['hour','weekday'], right_on = ['Hora', 'Día'])
+	#Filter periodo_cfe so that it only shows the Peak period
+	line_data = line_data[line_data['periodo_cfe'] == 'Punta']
+	#Get the maximum power in peak period of each day
+	line_data= line_data[['date','power(kW)']].groupby('date').max().reset_index()
+	#Join with temporal to have the exact time stamp of the maximum power
+	line_data = pd.merge(left = line_data, right = temporal, on=['date','power(kW)'])
+	#Drop unwanted columns
+	line_data.drop(columns = ['date','hour','weekday'], inplace = True)
+	#Order by measurement_time(UTC)
+	line_data = line_data.sort_values(by="measurement_time(UTC)")
+	
+	#Convert measurement-time(UTC) column data types to string
+	line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].astype(str)
+	return line_data
+
+
 @app.route('/')
 def home():
 
@@ -38,61 +86,24 @@ def building2():
 #Get the maximum power at peak hour
 @app.route('/punta/<site>/<mes>')
 def total_punta(site,mes):
-    engine = create_engine("sqlite:///static/db/project.sqlite")
-    session = Session(engine)
-    
-    # Create and modify a DataFrame containing information about CFE schedules
-    time_data = pd.read_sql('SELECT * FROM "horarios"', con = engine).drop(columns=['index'])
-    time_data = time_data[time_data['Temporada'] == 'Verano']
-    time_data['Hora'] = time_data['Hora'].apply(lambda x: datetime.strptime(x, '%H:%M').time())
-    time_data['Día'] = time_data['Día'].astype(str)
-    
-    
-    #Load the electrical measurements from the database
-    line_data = pd.read_sql('SELECT "measurement_time(UTC)", SUM("power(W)"/1000) AS "power(kW)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)
-    
-    
-    #Remove the +00
-    line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].str.slice(0,19)
-    #Convert to datetime object
-    line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].apply(lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M:%S'))
-    #Create month column and filter desired month
-    line_data['month'] = line_data['measurement_time(UTC)'].apply(lambda x: x.month)
-    line_data = line_data[line_data['month'] == int(mes)]
-    #Create hour column
-    line_data['hour'] = line_data['measurement_time(UTC)'].apply(lambda x: x.time())
-    #Create weekday column and modify it so that sunday is 0 and monday is 1
-    line_data['weekday'] = line_data['measurement_time(UTC)'].apply(lambda x: x.weekday())
-    line_data['weekday'] = line_data['weekday'].apply(lambda x: x +1).apply(lambda x: str(x).replace('7', '0'))
-    #Create date column
-    line_data['date'] = line_data['measurement_time(UTC)'].apply(lambda x: x.date())
-    #Create a copy of line_data DataFrame
-    temporal = line_data.copy()
-    
-    #Merge electrical measurements with CFE schedules
-    line_data = pd.merge(left = line_data, right = time_data, left_on=['hour','weekday'], right_on = ['Hora', 'Día'])
-    #Filter periodo_cfe so that it only shows the Peak period
-    line_data = line_data[line_data['periodo_cfe'] == 'Punta']
-    #Get the maximum power in peak period of each day
-    line_data= line_data[['date','power(kW)']].groupby('date').max().reset_index()
-    #Join with temporal to have the exact time stamp of the maximum power
-    line_data = pd.merge(left = line_data, right = temporal, on=['date','power(kW)'])
-    #Drop unwanted columns
-    line_data.drop(columns = ['date','hour','weekday'], inplace = True)
-    #Order by measurement_time(UTC)
-    line_data = line_data.sort_values(by="measurement_time(UTC)")
-    
-    #Convert measurement-time(UTC) column data types to string
-    line_data['measurement_time(UTC)'] = line_data['measurement_time(UTC)'].astype(str)
-    
-    #Convert DataFrame to dictionary/json thingy
-    json_thingy = [value for key, value in line_data.to_dict(orient = 'index').items()]
-    
-    
+	df = powerDataFrame(site, mes)
+	#Convert DataFrame to dictionary/json thingy
+	json_thingy = [value for key, value in df.to_dict(orient = 'index').items()]
+	return jsonify(json_thingy)
 
-    #return line_data
-    return jsonify(json_thingy)
 
+@app.route('/kpi/<site>/<mes>')
+def totalKpi(site, mes):
+	df = powerDataFrame(site, mes)
+	kpi = sum(df["power(kW)"])
+	kpiMXN = kpi * 364.9
+
+	totales = {
+			kpiTotal : kpi,
+			kpiTotalMXN : kpiMXN
+		};
+
+	return jsonify(kpi)
 
 
 @app.context_processor

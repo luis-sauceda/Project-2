@@ -3,11 +3,13 @@
 function setBuilding(building) {
 	selectedBuilding = building;
 	redraw();
+	drawKpi();
 }
 
 function setMonth(month) {
 	selectedMonth = month;
 	redraw();
+	drawKpi();
 }
 
 function redraw() {
@@ -68,6 +70,17 @@ function redraw() {
 			.attr("y", function (d) { return 0; } )
 			.attr("height", function (d) { return d["power(W)"]; })
 			.attr("width", 20)
+	});
+}
+
+function drawKpi() {
+	jQuery.ajax({
+		url: `/kpi/${selectedBuilding}/${selectedMonth}`,
+		type: 'GET',
+		contentType: 'application/json',
+		success: function (data) {
+			console.log(data);
+		}
 	});
 }
 

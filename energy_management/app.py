@@ -95,7 +95,7 @@ def total_punta(site,mes):
 @app.route('/kpi/<site>/<mes>')
 def totalKpi(site, mes):
 	df = powerDataFrame(site, mes)
-	kpi = sum(df["power(kW)"])
+	kpi = df["power(kW)"].sum()
 	kpiMXN = kpi * 364.9
 
 	totales = {

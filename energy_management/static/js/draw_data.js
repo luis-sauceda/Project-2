@@ -1,5 +1,72 @@
-// JavaScript source code
+//-----------------------------------------------------------------------------------
+//Setup svg area
+//-----------------------------------------------------------------------------------
+var svgWidth = parseInt(d3.select('#grafica').style('width'));
+var svgHeight = parseInt(d3.select('#grafica').style('height'));
 
+		// Define the chart's margins as an object
+var margin= {
+			top: 30,
+			right: 30,
+			bottom: 30,
+			left: 30
+};
+
+
+// Define dimensions of the chart area
+var width = svgWidth - margin['left'] - margin['right'];
+var height = svgHeight - margin.top - margin.bottom;
+
+
+//----------------------------------------------------------------------------------
+// Create an SVG wrapper :v
+//----------------------------------------------------------------------------------
+var svg = d3.select("#grafica")
+    .append("svg")
+        .attr("height", svgHeight)
+        .attr("width", svgWidth)
+
+
+
+
+var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin['left']}, ${margin['top']})`);
+
+
+//----------------------------------------------------------------------------------
+// JavaScript source code
+//---------------------------------------------------------------------------------
+
+
+// Function used for updating x-scale var upon click on axis label :v
+function xScale(chartData){
+    //Create my xScale
+    var xScale = d3.scaleBand()
+        .domain(chartData.map(d => d['measurement_time(UTC)']))
+            .range([0, width])
+            .paddingInner(0.1)
+            .paddingOuter(0.1);
+    return xScale
+};
+
+
+//Function used for updating y-scale var upon click on axis label :v
+function yScale(chartData){
+    var min = 0;
+    var max =  d3.max(chartData, d=> d['power(kW)']);
+    
+    // Define range
+    var yScale = d3.scaleLinear()
+        .domain([min, max])
+        .range([height, 0]);
+    return yScale
+};
+
+
+
+
+
+/*
 function setBuilding(building) {
 	selectedBuilding = building;
 	redraw();
@@ -11,67 +78,8 @@ function setMonth(month) {
 	redraw();
 	drawKpi();
 }
+*/
 
-function redraw() {
-	url = `punta/${selectedBuilding}/${selectedMonth}`;
-	console.log(url);
-	d3.json(url, function (data) {
-		console.log(data);
-
-		// Define SVG area dimensions
-		var svgWidth = parseInt(d3.select('#grafica').style('width'));
-		var svgHeight = parseInt(d3.select('#grafica').style('height'));
-
-		// Define the chart's margins as an object
-		var chartMargin = {
-			top: 30,
-			right: 30,
-			bottom: 30,
-			left: 30
-		};
-
-		// Define dimensions of the chart area
-		var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
-		var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
-
-		var svg = d3.select("#grafica").append("svg").attr("height", svgHeight).attr("width", svgWidth);
-		var chartGroup = svg.append("g")
-			.attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
-
-		// Cast the relevant values to integers
-		data.forEach(function (d) {
-			d.power = parseFloat(d.power);
-		});
-
-		var z = data.map(function (d) { return d["measurement_time(UTC)"]; });
-		console.log(z);
-
-		// Set x, y and colors
-		var xAxis = d3.scaleOrdinal()
-			.domain(data.map(function (d) { return d["measurement_time(UTC)"]; }))
-			.range([0, chartWidth]);
-
-		svg.append("g")
-			.attr("transform", `translate(0, ${chartHeight})`)
-			.call(d3.axisBottom(xAxis));
-
-
-		// Add Y axis
-		var yAxis = d3.scaleLinear()
-			.domain([0, d3.max(data, d => d["power(W)"]) + 1])
-			.range([chartHeight, 0]);
-		svg.append("g").call(d3.axisLeft(yAxis).ticks(5));
-
-
-		svg.append("g").selectAll("rect").data(data)
-			.enter()
-			.append("rect")
-			.attr("x", function (d) { return xAxis(d["measurement_time(UTC)"]); })
-			.attr("y", function (d) { return 0; } )
-			.attr("height", function (d) { return d["power(W)"]; })
-			.attr("width", 20)
-	});
-}
 
 function drawKpi() {
 	jQuery.ajax({
@@ -85,6 +93,8 @@ function drawKpi() {
 }
 
 
+
+/*
 // Cuerpo del js
 if (location.pathname.includes("building2")) {
 	setBuilding( insurgentes );
@@ -92,3 +102,51 @@ if (location.pathname.includes("building2")) {
 else {
 	setBuilding( reforma );
 }
+*/
+
+//-------------------------------------------------------------------------------------------------
+//Draw the graph
+//-------------------------------------------------------------------------------------------------
+url = `punta/${selectedBuilding}/${selectedMonth}`;
+console.log(url);
+    
+d3.json(url).then(powerData => {
+    // Cast the power measurement values to floats
+    powerData.forEach(d => {
+        d['power(kW)'] = parseFloat(d['power(kW)']);
+    });
+        
+    //--------------------------------------------------------------------------
+    //Define initial stuff for my graph :v
+    //-------------------------------------------------------------------------
+    //Create an xScale and yScale
+    var x = xScale(powerData);
+    var y = yScale(powerData);
+        
+    // Call x axis
+    var xAxis = d3.axisBottom(x);
+    
+    var xAxis = chartGroup.append('g')
+        .attr('transform', `translate(0,${height})`)
+        .call(xAxis);
+    
+    
+    //Call yAxis
+    var yAxis = d3.axisLeft(y);
+    
+    var yAxis = chartGroup.append('g')
+        .call(yAxis);
+    
+    //Draw rectangles
+    var rects = chartGroup.selectAll('rect')
+        .data(powerData);
+    
+    rects.enter()
+        .append('rect')
+            .attr('x', d => x(d['measurement_time(UTC)']))
+            .attr('y', d => y(d['power(kW)']))
+            .attr('width', x.bandwidth)
+            .attr('height', d => height - y(d['power(kW)']) )
+            .attr('fill', 'gold')
+});
+

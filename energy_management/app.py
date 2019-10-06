@@ -99,11 +99,11 @@ def totalKpi(site, mes):
 	kpiMXN = kpi * 364.9
 
 	totales = {
-			kpiTotal : kpi,
-			kpiTotalMXN : kpiMXN
+			"kpiTotal" : kpi,
+			"kpiTotalMXN" : kpiMXN
 		};
 
-	return jsonify(kpi)
+	return jsonify(totales)
 
 
 @app.context_processor

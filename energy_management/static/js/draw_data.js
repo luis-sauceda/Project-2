@@ -74,13 +74,10 @@ function redraw() {
 }
 
 function drawKpi() {
-	jQuery.ajax({
-		url: `/kpi/${selectedBuilding}/${selectedMonth}`,
-		type: 'GET',
-		contentType: 'application/json',
-		success: function (data) {
-			console.log(data);
-		}
+	dataUrl = `/kpi/${selectedBuilding}/${selectedMonth}`;
+	$.getJSON(dataUrl, function (data) {
+		console.log(data);
+		d3.select("#kpi").text(data.kpiTotal);
 	});
 }
 

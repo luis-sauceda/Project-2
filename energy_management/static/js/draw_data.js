@@ -53,12 +53,25 @@ function yScale(chartData, height){
 
 // Function to set the Kpi's in the html
 function drawKpi() {
-	dataUrl = `/kpi/${selectedBuilding}/${selectedMonth}`;
-	console.log(dataUrl);
-	$.getJSON(dataUrl, function (data) {
-		console.log(data);
-		d3.select("#kpi").text(data.kpiTotal);
+	energyUrl = `/kpi/${selectedBuilding}/${selectedMonth}`;
+	powerUrl = `punta/${selectedBuilding}/${selectedMonth}`;
+    
+    // console.log(dataUrl);
+	$.getJSON(energyUrl, function (data) {
+		//console.log(data);
+		d3.select("#kpi").text(Math.floor(data['energy(kWh)']));
+        d3.select('#kpi2').text(`$ ${Math.floor(data['energy_cost'])}`);
 	});
+    
+    $.getJSON(powerUrl, powerData =>{
+        //Obtain the maximum power
+        max_power = d3.max(powerData, d => d['power(kW)'])
+        console.log(max_power);
+        
+        d3.select('#kpi3').text(Math.floor(max_power));
+        d3.select('#kpi4').text(`$ ${Math.floor(max_power * 364.9)}`);
+    });
+    
 }
 
 
@@ -67,18 +80,19 @@ function drawKpi() {
 //-------------------------------------------------------------------------------------------------
 function drawGraph() {
 	url = `punta/${selectedBuilding}/${selectedMonth}`;
-	console.log(url);
+	//console.log(url);
 
 	//Setup svg area
 	var svgWidth = parseInt(d3.select('#grafica').style('width'));
-	var svgHeight = parseInt(d3.select('#grafica').style('height'));
+	var svgHeight = 450;
+    //var svgHeight = parseInt(d3.select('#grafica').style('height'));
 
 	// Define the chart's margins as an object
 	var margin = {
 		top: 30,
 		right: 30,
-		bottom: 30,
-		left: 30
+		bottom: 50,
+		left: 50
 	};
 
 	// Define dimensions of the chart area
@@ -94,7 +108,11 @@ function drawGraph() {
 	var chartGroup = svg.append("g")
 		.attr("transform", `translate(${margin['left']}, ${margin['top']})`);
 
-	d3.json(url, function(powerData) {
+    
+    //-------------------------------------------------------
+    //Read the endpoint and perform calculations
+    //------------------------------------------------------
+	d3.json(url).then(powerData =>{
 		// Cast the power measurement values to floats
 		powerData.forEach(d => {
 			d['power(kW)'] = parseFloat(d['power(kW)']);
@@ -121,6 +139,26 @@ function drawGraph() {
 		var yAxis = chartGroup.append('g')
 			.call(yAxis);
 
+        var xLabel = chartGroup.append('g')
+            .attr('transform', `translate(${width/2}, ${height+35})`)
+            .append('text')
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'arial')
+            .attr('font-size', 15)
+            .text('Time stamp')
+        
+        var yLabel = chartGroup.append('g')
+            .attr('transform', `translate(0, ${height/2})`)
+            .append('text')
+            .attr('x',0)
+            .attr('y', -30)
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'arial')
+            .attr('font-size', 15)
+            .attr('transform', 'rotate(-90)')
+            .text('Power (kW)')
+        
+        
 		//Draw rectangles
 		var rects = chartGroup.selectAll('rect')
 			.data(powerData);
@@ -132,6 +170,10 @@ function drawGraph() {
 			.attr('width', x.bandwidth)
 			.attr('height', d => height - y(d['power(kW)']))
 			.attr('fill', 'gold')
+        
+        
+        
+        
 	});
 
 }

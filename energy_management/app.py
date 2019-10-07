@@ -24,6 +24,9 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///static/db/project.sqlite"
 
 
+#--------------------------------------------------------------------------
+#Function to get the maximum power at peak period
+#---------------------------------------------------------------------------
 def powerDataFrame(site, mes):
 	engine = create_engine("sqlite:///static/db/project.sqlite")
 	session = Session(engine)
@@ -72,6 +75,38 @@ def powerDataFrame(site, mes):
 	return line_data
 
 
+#---------------------------------------------------------------------------------------------
+#Function to get the total energy consumption of the month
+#------------------------------------------------------------------------------------------
+def energyDataFrame(site, mes):
+    engine = create_engine("sqlite:///static/db/project.sqlite")
+    session = Session(engine)
+    # Load the electrical measurements from the database
+    energy_data = pd.read_sql('SELECT "measurement_time(UTC)", SUM("power(W)"/1000*5/60) AS "energy(kWh)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)
+
+    #Remove the +00
+    energy_data['measurement_time(UTC)'] = energy_data['measurement_time(UTC)'].str.slice(0,19)
+
+    #Convert to datetime object
+    energy_data['measurement_time(UTC)'] = energy_data['measurement_time(UTC)'].apply(lambda x: datetime.strptime(x,'%Y-%m-%d %H:%M:%S'))
+
+    #Create month column and filter desired month
+    energy_data['month'] = energy_data['measurement_time(UTC)'].apply(lambda x: x.month)
+    energy_data = energy_data[energy_data['month'] == int(mes)]
+
+    #Get the total energy of the whole month
+    energy_data = energy_data.groupby('month').sum()
+    
+    energy_data = energy_data.to_dict(orient = 'list')
+    return energy_data
+    
+
+
+
+    
+#--------------------------------------------------------------------------------------------------
+#Define the different routes of the app
+#--------------------------------------------------------------------------------------------------
 @app.route('/')
 def home():
 
@@ -94,16 +129,12 @@ def total_punta(site,mes):
 
 @app.route('/kpi/<site>/<mes>')
 def totalKpi(site, mes):
-	df = powerDataFrame(site, mes)
-	kpi = df["power(kW)"].sum()
-	kpiMXN = kpi * 364.9
-
-	totales = {
-			"kpiTotal" : kpi,
-			"kpiTotalMXN" : kpiMXN
-		};
-
-	return jsonify(totales)
+    energy_dict = energyDataFrame(site, mes)
+    energy_dict['energy(kWh)'] = energy_dict['energy(kWh)'][0]
+    energy_dict['energy_cost'] = energy_dict['energy(kWh)'] * 2.7
+    #kpiMXN = kpi * 364.9
+    
+    return jsonify(energy_dict)
 
 
 @app.context_processor

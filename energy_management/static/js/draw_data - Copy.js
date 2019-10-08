@@ -44,7 +44,7 @@ function drawKpi(selectedBuilding, selectedMonth) {
     $.getJSON(powerUrl, powerData =>{
         //Obtain the maximum power
         max_power = d3.max(powerData, d => d['power(kW)'])
-        //console.log(max_power);
+        console.log(max_power);
         
         d3.select('#kpi3').text(Math.floor(max_power));
         d3.select('#kpi4').text(`$ ${Math.floor(max_power * 364.9)}`);
@@ -53,10 +53,10 @@ function drawKpi(selectedBuilding, selectedMonth) {
 }
 
 drawKpi(selectedBuilding, selectedMonth);
-
 //-------------------------------------------------------------------------------------------------
 //Draw the graph
 //-------------------------------------------------------------------------------------------------
+
 
 //Setup svg area
 var svgWidth = parseInt(d3.select('#grafica').style('width'));
@@ -84,7 +84,7 @@ var svg = d3.select("#grafica")
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin['left']}, ${margin['top']})`);
 
-
+    
 
 function drawGraph(selectedBuilding, selectedMonth) {
 	url = `punta/${selectedBuilding}/${selectedMonth}`;
@@ -98,15 +98,18 @@ function drawGraph(selectedBuilding, selectedMonth) {
 		powerData.forEach(d => {
 			d['power(kW)'] = parseFloat(d['power(kW)']);
 		});
-        //Update data after changes in the buttons
-        //console.log(powerData);
-        var x = xScale(powerData, width);
+
+		//--------------------------------------------------------------------------
+		//Define initial stuff for my graph :v
+		//-------------------------------------------------------------------------
+		//Create an xScale and yScale
+		var x = xScale(powerData, width);
 		var y = yScale(powerData, height);
 
 		// Call x axis
 		var xAxis = d3.axisBottom(x);
-		
-        var xAxis =chartGroup.append('g')
+
+		var xAxis = chartGroup.append('g')
 			.attr('transform', `translate(0,${height})`)
 			.call(xAxis)
             .selectAll('text')
@@ -140,11 +143,13 @@ function drawGraph(selectedBuilding, selectedMonth) {
             .attr('transform', 'rotate(-90)')
             .text('Power (kW)')
         
-        //JOIN new data with old elements
+        //var monthLabels = 
+        
+        
+		//Draw rectangles
 		var rects = chartGroup.selectAll('rect')
 			.data(powerData);
-        
-                // ENTER new elements present in new data.
+
 		rects.enter()
 			.append('rect')
 			.attr('x', d => x(d['measurement_time(UTC)']))
@@ -154,113 +159,18 @@ function drawGraph(selectedBuilding, selectedMonth) {
 			.attr('fill', 'gold')
         
         
-        //update(powerData);
+        
         
 	});
+
 };
 
 
-function update(selectedBuilding, selectedMonth){
-    url = `punta/${selectedBuilding}/${selectedMonth}`;
-    //DELETE FROM HERE
-    //Setup svg area
-var svgWidth = parseInt(d3.select('#grafica').style('width'));
-var svgHeight = 600;
-//var svgHeight = parseInt(d3.select('#grafica').style('height'));
-
-// Define the chart's margins as an object
-var margin = {
-    top: 30,
-    right: 30,
-    bottom: 150,
-    left: 50
+function updateGraph(selectedBuilding, selectedMonth){
+    
 };
 
-// Define dimensions of the chart area
-var width = svgWidth - margin['left'] - margin['right'];
-var height = svgHeight - margin.top - margin.bottom;
 
-// Create an SVG wrapper :v
-var svg = d3.select("#grafica")
-    .append("svg")
-		.attr("height", svgHeight)
-		.attr("width", svgWidth)
-
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin['left']}, ${margin['top']})`);
-
-
-    // TO HERE AND FIND THE WAY TO MAKE IT FULLY FYNAMIC SOMEDAY
-    
-    
-    
-    d3.json(url).then(powerData =>{
-        var x = xScale(powerData, width);
-		var y = yScale(powerData, height);
-		// Call x axis
-		var xAxis = d3.axisBottom(x);
-		
-        var xAxis =chartGroup.append('g')
-			.attr('transform', `translate(0,${height})`)
-			.call(xAxis)
-            .selectAll('text')
-                .attr('transform', 'rotate(-60)')
-                .attr('text-anchor', 'end')
-                .attr('font-size',12);
-
-		//Call yAxis
-		var yAxis = d3.axisLeft(y);
-
-		var yAxis = chartGroup.append('g')
-			.call(yAxis);
-
-        var xLabel = chartGroup.append('g')
-            .attr('transform', `translate(${width/2}, ${height + 125})`)
-            .append('text')
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'arial')
-            .attr('font-size', 15)
-            .text('Time stamp')
-        
-        var yLabel = chartGroup.append('g')
-            .attr('transform', `translate(0, ${height/2})`)
-            .append('text')
-            .attr('x',0)
-            .attr('y', -30)
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'arial')
-            .attr('font-size', 15)
-            .attr('transform', 'rotate(-90)')
-            .text('Power (kW)')
-        
-		//JOIN new data with old elements
-		var rects = chartGroup.selectAll('rect')
-			.data(powerData);
-        
-        // EXIT old elements not present in new data
-        rects.exit().remove()
-    
-        //UPDATE old elements present in new data.
-        rects
-			.attr('x', d => x(d['measurement_time(UTC)']))
-			.attr('y', d => y(d['power(kW)']))
-			.attr('width', x.bandwidth)
-			.attr('height', d => height - y(d['power(kW)']))
-        
-        
-        // ENTER new elements present in new data.
-		rects.enter()
-			.append('rect')
-			.attr('x', d => x(d['measurement_time(UTC)']))
-			.attr('y', d => y(d['power(kW)']))
-			.attr('width', x.bandwidth)
-			.attr('height', d => height - y(d['power(kW)']))
-			.attr('fill', 'gold')
-        
-        
-        
-    })
-};
 
 
 
@@ -280,14 +190,12 @@ else {
 
 
 // Draw the graph for the first time
+drawGraph(selectedBuilding, selectedMonth);
 
-
-xAxis = drawGraph(selectedBuilding, selectedMonth);
-console.log(xAxis);
 //Listen to the changes on the selection buttons
-d3.selectAll(('input[name="optionsRadios"]'))
-    .on('change', function(){
-        update(selectedBuilding, this.value);
-        drawKpi(selectedBuilding, this.value);
-    });
+d3.selectAll(('input[name="optionsRadios"]')).on('change', function(){
+    console.log(this.value);
+    drawGraph(selectedBuilding, this.value);
+    drawKpi(selectedBuilding, this.value);
+});
 

@@ -34,7 +34,7 @@ var url1 = window.location.href;
 
 // define popup marker content
 var popupContentRef1 =  '<a target="_blank" class="popup" href="/" target = "_top">' +
-                    '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+                    '<img src="static/images/46321.png" height="200" width="250"/>' +
                     "<div>Reforma 490 - Sub2</div>" +
                     '</a>';
 // Binding a pop-up to our marker
@@ -47,7 +47,7 @@ var markerReforma2 = L.marker([19.3719720, -99.2607440], {
 }).addTo(myMap);
 
 var popupContentRef2 =  '<a target="_blank" class="popup" href="/" target = "_top">' +
-                    '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+                    '<img src="static/images/46321.png" height="200" width="250"/>' +
                     "<div>Reforma 490 - Sub3</div>" +
                     '</a>';
                     
@@ -67,7 +67,7 @@ var url2 = window.location.href + 'building2';
 //                     '</a>';
 
 var popupContentIns =  '<a target="_blank" class="popup" href="/building2" target = "_top">' +
-                    '<img src="energy_management/documentation/Insurgentes 688.png" height="200" width="250"/>' +
+                    '<img src="static/images/46191.PNG" height="200" width="250"/>' +
                     "<div>Insurgentes 688</div>" +
                     '</a>';
 

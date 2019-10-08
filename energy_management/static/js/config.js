@@ -6,5 +6,3 @@ var agosto = "8";
 
 var reforma = "46321";
 var insurgentes = "46191";
-
-var selectedBuilding = reforma;

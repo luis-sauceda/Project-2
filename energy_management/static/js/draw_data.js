@@ -2,6 +2,20 @@
 
 //Select the desired month from the button selection
 var selectedMonth = d3.select('input[name="optionsRadios"]:checked').node().value;
+
+
+// Define the initial building
+if (location.pathname.includes("building2")) {
+	//setBuilding(insurgentes);
+    var selectedBuilding = reforma;
+}
+else {
+	//setBuilding(reforma);
+    var selectedBuilding = insurgentes;
+}
+
+
+
 ////////////////////////////      FUNCIONES      //////////////////////////////////////////////////////////
 
 // Function used for updating x-scale var upon click on axis label :v
@@ -268,22 +282,11 @@ var chartGroup = svg.append("g")
 //Draw the graph for the first time :v
 //--------------------------------------------------------------------------------------------------------
 
-// Define the initial building
-if (location.pathname.includes("building2")) {
-	//setBuilding(insurgentes);
-    var selectedBuilding = insurgentes;
-}
-else {
-	//setBuilding(reforma);
-    var selectedBuilding = reforma;
-}
-
 
 // Draw the graph for the first time
 
+drawGraph(selectedBuilding, selectedMonth);
 
-xAxis = drawGraph(selectedBuilding, selectedMonth);
-console.log(xAxis);
 //Listen to the changes on the selection buttons
 d3.selectAll(('input[name="optionsRadios"]'))
     .on('change', function(){

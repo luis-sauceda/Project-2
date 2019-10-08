@@ -28,7 +28,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///static/db/project.sqlite"
 #Function to get the maximum power at peak period
 #---------------------------------------------------------------------------
 def powerDataFrame(site, mes):
-	engine = create_engine("sqlite:///static/db/project.sqlite")
+	engine = create_engine("sqlite:///db/project.sqlite")
 	session = Session(engine)
 
 	# Create and modify a DataFrame containing information about CFE schedules
@@ -79,7 +79,7 @@ def powerDataFrame(site, mes):
 #Function to get the total energy consumption of the month
 #------------------------------------------------------------------------------------------
 def energyDataFrame(site, mes):
-    engine = create_engine("sqlite:///static/db/project.sqlite")
+    engine = create_engine("sqlite:///db/project.sqlite")
     session = Session(engine)
     # Load the electrical measurements from the database
     energy_data = pd.read_sql('SELECT "measurement_time(UTC)", SUM("power(W)"/1000*5/60) AS "energy(kWh)" FROM measurements WHERE device_id IN (SELECT device_id FROM dg WHERE dg1 = \'Total\' AND dg.site_id IN (SELECT site_id FROM sites WHERE site_id = {})) GROUP BY "measurement_time(UTC)"'.format(site), con = engine)

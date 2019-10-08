@@ -8,4 +8,3 @@ var reforma = "46321";
 var insurgentes = "46191";
 
 var selectedBuilding = reforma;
-var selectedMonth = julio;

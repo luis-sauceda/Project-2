@@ -1,17 +1,21 @@
 
 // Cuerpo del js
 if (location.pathname.includes("building2")) {
-	setBuilding(insurgentes);
+	//setBuilding(insurgentes);
+    var selectedBuilding = insurgentes;
 }
 else {
-	setBuilding(reforma);
+	//setBuilding(reforma);
+    var selectedBuilding = reforma;
 }
 
-
+//Select the desired month from the button selection
+var selectedMonth = d3.select('input[name="optionsRadios"]:checked').node().value;
 
 ////////////////////////////      FUNCIONES      //////////////////////////////////////////////////////////
 
 // Function used to set the selected building and redraw everything that needs to be redrawn
+/*
 function setBuilding(building) {
 	selectedBuilding = building;
 	drawGraph();
@@ -25,6 +29,7 @@ function setMonth(month) {
 	drawKpi();
 }
 
+*/
 
 // Function used for updating x-scale var upon click on axis label :v
 function xScale(chartData, width){
@@ -52,7 +57,7 @@ function yScale(chartData, height){
 
 
 // Function to set the Kpi's in the html
-function drawKpi() {
+function drawKpi(selectedBuilding, selectedMonth) {
 	energyUrl = `/kpi/${selectedBuilding}/${selectedMonth}`;
 	powerUrl = `punta/${selectedBuilding}/${selectedMonth}`;
     
@@ -74,24 +79,24 @@ function drawKpi() {
     
 }
 
-
+drawKpi(selectedBuilding, selectedMonth);
 //-------------------------------------------------------------------------------------------------
 //Draw the graph
 //-------------------------------------------------------------------------------------------------
-function drawGraph() {
+function drawGraph(selectedBuilding, selectedMonth) {
 	url = `punta/${selectedBuilding}/${selectedMonth}`;
 	//console.log(url);
 
 	//Setup svg area
 	var svgWidth = parseInt(d3.select('#grafica').style('width'));
-	var svgHeight = 450;
+	var svgHeight = 600;
     //var svgHeight = parseInt(d3.select('#grafica').style('height'));
 
 	// Define the chart's margins as an object
 	var margin = {
 		top: 30,
 		right: 30,
-		bottom: 50,
+		bottom: 150,
 		left: 50
 	};
 
@@ -130,7 +135,11 @@ function drawGraph() {
 
 		var xAxis = chartGroup.append('g')
 			.attr('transform', `translate(0,${height})`)
-			.call(xAxis);
+			.call(xAxis)
+            .selectAll('text')
+                .attr('transform', 'rotate(-60)')
+                .attr('text-anchor', 'end')
+                .attr('font-size',12);
 
 
 		//Call yAxis
@@ -140,7 +149,7 @@ function drawGraph() {
 			.call(yAxis);
 
         var xLabel = chartGroup.append('g')
-            .attr('transform', `translate(${width/2}, ${height+35})`)
+            .attr('transform', `translate(${width/2}, ${height + 125})`)
             .append('text')
             .attr('text-anchor', 'middle')
             .attr('font-family', 'arial')
@@ -157,6 +166,8 @@ function drawGraph() {
             .attr('font-size', 15)
             .attr('transform', 'rotate(-90)')
             .text('Power (kW)')
+        
+        //var monthLabels = 
         
         
 		//Draw rectangles
@@ -176,4 +187,12 @@ function drawGraph() {
         
 	});
 
-}
+};
+
+
+d3.selectAll(('input[name="optionsRadios"]')).on('change', function(){
+    console.log(this.value);
+    drawGraph(selectedBuilding, this.value);
+    drawKpi(selectedBuilding, this.value);
+});
+

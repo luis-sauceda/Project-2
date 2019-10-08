@@ -174,34 +174,36 @@ function drawGraph(selectedBuilding, selectedMonth) {
 };
 
 
-function update(selectedBuilding, selectedMonth){
-    url = `punta/${selectedBuilding}/${selectedMonth}`;
+function update(selectedBuilding, selectedMonth) {
+	document.getElementById('grafica').innerHTML = "";
+
+	url = `punta/${selectedBuilding}/${selectedMonth}`;
     //DELETE FROM HERE
     //Setup svg area
-var svgWidth = parseInt(d3.select('#grafica').style('width'));
-var svgHeight = 600;
-//var svgHeight = parseInt(d3.select('#grafica').style('height'));
+		var svgWidth = parseInt(d3.select('#grafica').style('width'));
+		var svgHeight = 600;
+		//var svgHeight = parseInt(d3.select('#grafica').style('height'));
 
-// Define the chart's margins as an object
-var margin = {
-    top: 30,
-    right: 30,
-    bottom: 150,
-    left: 50
-};
+		// Define the chart's margins as an object
+		var margin = {
+				top: 30,
+				right: 30,
+				bottom: 150,
+				left: 50
+		};
 
-// Define dimensions of the chart area
-var width = svgWidth - margin['left'] - margin['right'];
-var height = svgHeight - margin.top - margin.bottom;
+		// Define dimensions of the chart area
+		var width = svgWidth - margin['left'] - margin['right'];
+		var height = svgHeight - margin.top - margin.bottom;
 
-// Create an SVG wrapper :v
-var svg = d3.select("#grafica")
-    .append("svg")
-		.attr("height", svgHeight)
-		.attr("width", svgWidth)
+		// Create an SVG wrapper :v
+		var svg = d3.select("#grafica")
+				.append("svg")
+				.attr("height", svgHeight)
+				.attr("width", svgWidth)
 
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin['left']}, ${margin['top']})`);
+		var chartGroup = svg.append("g")
+				.attr("transform", `translate(${margin['left']}, ${margin['top']})`);
 
 
     // TO HERE AND FIND THE WAY TO MAKE IT FULLY FYNAMIC SOMEDAY
